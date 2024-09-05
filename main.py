@@ -2,26 +2,28 @@
 from PIL import Image
 from pypdf import PdfReader
 from pytesseract import pytesseract
-import fitz
+import pymupdf
+import codecs
 
-tesseract = r"C:\Users\marco.osorio\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
-pytesseract.tesseract_cmd = tesseract
-# Abre una imagen sencilla.
-image = r"C:\Users\marco.osorio\Downloads\image002.png"
-img = Image.open(image)
-imageText = pytesseract.image_to_string(img)
-print(imageText[:-1])
+# tesseract = r"C:\Users\marco.osorio\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
+# pytesseract.tesseract_cmd = tesseract
+# # Abre una imagen sencilla.
+# # image = r"C:\Users\marco.osorio\Downloads\image002.png"
+# # img = Image.open(image)
+# # imageText = pytesseract.image_to_string(img)
+# # print(imageText[:-1])
 
 # PDF de imagenes.
-pdf = r"C:\Users\marco.osorio\Downloads\Medellin Acuerdo.pdf"
+pdf_path = r"C:\Users\marco.osorio\Downloads\Medellin Acuerdo.pdf"
+pdf = pymupdf.open(pdf_path)
 
-#Método 1
-# reader = PdfReader(pdf)
-# # número de páginas en el pdf
-# # print(len(reader.pages))
-# page = reader.pages[5]
-# pdfText = page.extract_text()
-# print(pdfText)
+text=""
+for page in pdf:
+    text += page.get_text("text")
 
-#Método 2
-reader = fitz.open(pdf)
+with codecs.open("metodo2.txt", "w","utf-8") as file:
+    # Write some text to the file
+    file.write(text)
+    
+file.close()
+pdf.close()
