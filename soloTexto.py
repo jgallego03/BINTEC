@@ -1,6 +1,7 @@
 import os
 import mimetypes
 import pytesseract
+from pytesseract import Output
 from pdf2image import convert_from_path
 from PyPDF2 import PdfReader
 from docx import Document
@@ -47,10 +48,10 @@ def extraer_texto_ocr(file_path):
     try:
         print(f"Usando Poppler desde: {poppler_path}")
         pages = convert_from_path(file_path, poppler_path=poppler_path)
-        
-        # Usar OCR en cada página convertida
+
+        # Usar OCR en cada página convertida, con más control sobre la segmentación
         for page in pages:
-            texto += pytesseract.image_to_string(page)
+            texto += pytesseract.image_to_string(page, config='--psm 6')  # Configurar el modo PSM
     except Exception as e:
         print(f"Error al convertir el archivo con OCR: {e}")
     
